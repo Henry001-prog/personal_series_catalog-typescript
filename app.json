@@ -4,10 +4,10 @@
     "slug": "personal_series_catalog-typescript",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/tv-show-mdpi.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/tv-show-mdpi.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,13 +18,28 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alissonhenrique.serie",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.alissonhenrique.serie",
+      "splash": {
+        "ldpi": "./assets/tv-show-mdpi.png",
+        "hdpi": "./assets/tv-show-hdpi.png",
+        "xhdpi": "./assets/tv-show-xhdpi.png",
+        "xxhdpi": "./assets/tv-show-xxhdpi.png",
+        "xxxhdpi": "./assets/tv-show-xxxhdpi.png"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
