@@ -6,16 +6,17 @@ import {
 } from "react-native";
 import firebase from "firebase";
 
-import { tryLogin } from "../../storeJotai/userAtom";
+import { tryLogin, isLoading } from "../../storeJotai/userAtom";
+import { useAtom } from "jotai";
 
 import { Div, Form, Input, Loading, Button, TextButton } from "./styles";
 import { MainScreenNavigationProp } from "../../types/navigation";
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setIsLoading] = useAtom<boolean>(isLoading);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const navigation = useNavigation<MainScreenNavigationProp>();
 
@@ -39,7 +40,7 @@ export default function LoginPage() {
   }, []);
 
   function renderButton() {
-    if (isLoading) return <Loading size="large" color="light-blue" />;
+    if (loading) return <Loading size="large" color="light-blue" />;
     return (
       <Button
         onPress={() => {

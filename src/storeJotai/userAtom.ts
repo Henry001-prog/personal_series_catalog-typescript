@@ -2,8 +2,9 @@ import firebase from "firebase";
 import { Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { LoginScreenNavigationProp, MainScreenNavigationProp } from "../types/navigation";
-import { useNavigation } from "@react-navigation/native";
+import { atom } from "jotai";
 
+export const isLoading = atom<boolean>(false);
 export interface ILogin {
   email: string
   password: string
@@ -16,15 +17,18 @@ export const tryLogin = async (
   password: string,
   navigation: MainScreenNavigationProp,
   setIsLoading: (value: boolean) => void
-) => {
+): Promise<void> => {
   setIsLoading(true);
   function getMessageByErrorCode(errorCode: any) {
     switch (errorCode) {
       case "auth/wrong-password":
-        return setIsLoading(false);
+        setIsLoading(false);
+        return "Senha incorreta";
       case "auth/user-not-found":
+        setIsLoading(false);
         return "Usuário não encontrado";
       default:
+        setIsLoading(false);
         return "Erro desconhecido";
     }
   }
@@ -35,6 +39,7 @@ export const tryLogin = async (
     setIsLoading(true);
     if (user) {
       navigation.replace("Main");
+      return setIsLoading(false);
     }
     setIsLoading(false);
   } catch (error: any) {
@@ -74,7 +79,7 @@ export const tryLogin = async (
   }
 };
 
-export const logout = async (navigation: LoginScreenNavigationProp) => {
+export const logout = async (navigation: LoginScreenNavigationProp): Promise<void> => {
   try {
     const tryLogout = firebase.auth().signOut();
     navigation.replace("Login");

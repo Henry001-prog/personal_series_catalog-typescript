@@ -41,7 +41,7 @@ type StackParamsList = {
 };
 
 export default function SerieFormPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [serieFormAtom, setSerieFormAtom] = useAtom(setFieldAtom);
 
   const route = useRoute<RouteProp<StackParamsList, "SerieForm">>();

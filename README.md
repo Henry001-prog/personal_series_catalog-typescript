@@ -1,8 +1,5 @@
 <h1 align="center">Personal Series Catalog</h1>
 
-<h2>Note: there are three branches in this repository, one using class components (master), one using function components with hooks (develop) and one using function components with hooks and Jotai replacing the Redux (develop-v2).
-</h2>
-
 <br>
 
 <h3 align="center">Application running on an Android device</h3>
