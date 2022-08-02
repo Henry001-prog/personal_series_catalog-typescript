@@ -19,7 +19,8 @@ export const watchSeriesJotaiAtom = async (): Promise<SeriesType[] | undefined> 
       return { ...series[id], id };
     });
 
-    return seriesWithKeys;
+    const isLast = { isLast: true } as SeriesType;
+    return [...seriesWithKeys, isLast];
   } catch (error: any) {
     if (!error.message.includes("null is not an object")) {
       Alert.alert("Error: could not login!");

@@ -20,8 +20,8 @@ import {
 import { isLoading } from "../../storeJotai/serieFormAtom";
 import { useAtom } from "jotai";
 
-import { StackNavigationProp } from "@react-navigation/stack";
-import { SeriesType, IAction, Item } from "../../interfaces/seriesType";
+
+import { SeriesType, Item } from "../../interfaces/seriesType";
 import { SerieFormScreenNavigationProp, SerieDetailScreenNavigationProp } from "../../types/navigation";
 
 const isEven = (number: number) => number % 2 === 0;
@@ -51,7 +51,7 @@ export default function SeriesPage(navigation: SerieFormScreenNavigationProp | S
         </ViewLoading>
       ) : (
         <ViewList
-          data={[...series, { isLast: true }]}
+          data={series}
           renderItem={({ item, index }: Item) =>
             item.isLast ? (
               <AddSerieCard
@@ -67,8 +67,8 @@ export default function SeriesPage(navigation: SerieFormScreenNavigationProp | S
           keyExtractor={(item, index: number) => index.toString()}
           numColumns={2}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={(props) => <ViewTop />}
-          ListFooterComponent={(props) => <ViewBottom />}
+          ListHeaderComponent={() => <ViewTop />}
+          ListFooterComponent={() => <ViewBottom />}
         />
       )}
     </Container>
