@@ -15,7 +15,7 @@ export const watchSeriesJotaiAtom = async (): Promise<SeriesType[] | undefined> 
     const series = snapshot.val();
 
     const keys = Object.keys(series);
-    const seriesWithKeys = keys.map((id) => {
+    const seriesWithKeys: SeriesType[] = keys.map((id) => {
       return { ...series[id], id };
     });
 
