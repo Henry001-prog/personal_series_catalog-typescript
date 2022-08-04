@@ -116,6 +116,7 @@ export default function SerieFormPage() {
       <ScrollView
         contentContainerStyle={{ padding: 10 }}
         keyboardShouldPersistTaps={"handled"}
+        showsVerticalScrollIndicator={false}
       >
         <FormRow first>
           <TextInput
