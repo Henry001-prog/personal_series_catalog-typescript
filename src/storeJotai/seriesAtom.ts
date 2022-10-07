@@ -28,7 +28,7 @@ export const watchSeriesJotaiAtom = async (): Promise<SeriesType[] | undefined> 
   }
 };
 
-export const watchSeriesJotai = atom<SeriesType[] | undefined>([]);
+export const watchSeriesJotai = atom<SeriesType[] | undefined | {}>([]);
 export const isLoading = atom<boolean>(false);
 
 // const navigation = useNavigation<MainScreenNavigationProp>();

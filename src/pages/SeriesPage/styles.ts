@@ -12,7 +12,6 @@ export const ViewLoading = styled.View`
 export const Loading = styled.ActivityIndicator``;
 
 export const Container = styled.View`
-  flex: 1;
   background-color: #252535;
   align-items: center;
   justify-content: center;
@@ -56,9 +55,9 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   background-color: #007fff;
   border-radius: 100px;
-  height: ${width > 400 ? '12.2%' : '10.8%'};
+  height: ${width > 400 ? '12.2%' : '9.45%'};
   width: ${width > 400 ? '20.5%' : '21.5%'};
-  top: ${width > 400 ? '-2.8%' : '-2.1%'};
+  top: ${width > 400 ? '-2.8%' : '-12.54%'};
   margin-left: 0.15%;
 `;
 

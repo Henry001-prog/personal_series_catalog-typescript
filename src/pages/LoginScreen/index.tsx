@@ -15,8 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPage() {
   const [loading, setIsLoading] = useAtom<boolean>(isLoading);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const navigation = useNavigation<MainScreenNavigationProp>();
 
@@ -52,6 +52,10 @@ export default function LoginPage() {
       </Button>
     );
   }
+
+  // const values = data.map((item, index) => (
+  //   <Text key={index}>{item.title}</Text>
+  // ));
 
   return (
     <Div>

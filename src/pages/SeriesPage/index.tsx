@@ -30,6 +30,8 @@ import {
 import { isLoading } from "../../storeJotai/serieFormAtom";
 import { useAtom } from "jotai";
 
+import api from "../../services/api";
+
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SeriesType, IAction, Item } from "../../interfaces/seriesType";
 import {
@@ -49,17 +51,40 @@ export default function SeriesPage(
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<SerieFormScreenNavigationProp>();
 
+  // useEffect(() => {
+  //   setLoading(true);
+  //   async function results() {
+  //     setLoading(true);
+  //     const response: SeriesType[] | undefined | {} = await watchSeriesJotaiAtom();
+  //     if (Object.is(response, {})) {
+  //       setSeries({})
+  //     } else {
+  //       setSeries(response);
+  //     }
+      
+  //     setLoading(false);
+  //   }
+  //   results();
+  //   if (isFocused) results();
+  // }, [isFocused, setLoading, setSeries]);
+
   useEffect(() => {
     setLoading(true);
     async function results() {
-      setLoading(true);
-      const response: SeriesType[] | undefined = await watchSeriesJotaiAtom();
-      setSeries(response);
+      const response = await api.get("/series", {
+        params: {
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzNlNjRjOWVmYzBjZmExMmE5ZDY2ODAiLCJuYW1lIjoiSGVucnkiLCJlbWFpbCI6ImhlbnJ5QG1haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkUi9MdUUzTk53a3dRcGIwZ25kWGRaZWVHMVBXcEhZU0tCdEpEQUJHa2hoWk5DWXZsS1VUV3kiLCJfX3YiOjAsImlhdCI6MTY2NTEyNTI2NywiZXhwIjoxNjY1MjExNjY3fQ.6Mpqx0kLvFhR-YhRJNQGy-_vLPHW7eul-9-oUE4IdLI",
+        },
+      });
+      const series = response.data.docs;
+      setSeries(series);
       setLoading(false);
     }
     results();
     if (isFocused) results();
   }, [isFocused, setLoading, setSeries]);
+
 
   const TAB_HEIGHT = 60;
 
@@ -94,7 +119,7 @@ export default function SeriesPage(
 
   return (
     <Container>
-      {(!series && series === {}) || loading ? (
+      {Object.is(series, {}) || loading ? (
         <ViewLoading>
           <Loading size="large" color="light-blue" />
         </ViewLoading>
@@ -112,12 +137,11 @@ export default function SeriesPage(
         />
       )}
         <Svg
-          style={{ top: width > 400 ? 84 : 86 }}
           x="0px"
           y="0px"
           width="100%"
           height="14.6%"
-          viewBox="0 0 1092 260"
+          viewBox="0 0 1092 225"
         >
           <Path
             fill="#3c3951"
@@ -125,7 +149,7 @@ export default function SeriesPage(
           />
         </Svg>
         <Button onPress={() => navigate("SerieForm")}>
-          <FontAwesome5 name="plus" size={45} color="white" />
+          <FontAwesome5 name="plus" size={40} color="white" />
         </Button>
     </Container>
   );
