@@ -51,39 +51,39 @@ export default function SeriesPage(
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<SerieFormScreenNavigationProp>();
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   async function results() {
-  //     setLoading(true);
-  //     const response: SeriesType[] | undefined | {} = await watchSeriesJotaiAtom();
-  //     if (Object.is(response, {})) {
-  //       setSeries({})
-  //     } else {
-  //       setSeries(response);
-  //     }
-      
-  //     setLoading(false);
-  //   }
-  //   results();
-  //   if (isFocused) results();
-  // }, [isFocused, setLoading, setSeries]);
-
   useEffect(() => {
     setLoading(true);
     async function results() {
-      const response = await api.get("/series", {
-        params: {
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzNlNjRjOWVmYzBjZmExMmE5ZDY2ODAiLCJuYW1lIjoiSGVucnkiLCJlbWFpbCI6ImhlbnJ5QG1haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkUi9MdUUzTk53a3dRcGIwZ25kWGRaZWVHMVBXcEhZU0tCdEpEQUJHa2hoWk5DWXZsS1VUV3kiLCJfX3YiOjAsImlhdCI6MTY2NTEyNTI2NywiZXhwIjoxNjY1MjExNjY3fQ.6Mpqx0kLvFhR-YhRJNQGy-_vLPHW7eul-9-oUE4IdLI",
-        },
-      });
-      const series = response.data.docs;
-      setSeries(series);
+      setLoading(true);
+      const response: SeriesType[] | undefined | {} = await watchSeriesJotaiAtom();
+      if (Object.is(response, {})) {
+        setSeries({})
+      } else {
+        setSeries(response);
+      }
+      
       setLoading(false);
     }
     results();
     if (isFocused) results();
   }, [isFocused, setLoading, setSeries]);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   async function results() {
+  //     const response = await api.get("/series", {
+  //       params: {
+  //         token:
+  //           "",
+  //       },
+  //     });
+  //     const series = response.data.docs;
+  //     setSeries(series);
+  //     setLoading(false);
+  //   }
+  //   results();
+  //   if (isFocused) results();
+  // }, [isFocused, setLoading, setSeries]);
 
 
   const TAB_HEIGHT = 60;
