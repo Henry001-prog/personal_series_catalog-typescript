@@ -1,12 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Router from "./Router";
-
-import { Provider as Store } from "jotai";
+import { RecoilRoot } from "recoil";
 
 const SeriesApp = () => (
-  <Store>
+  <RecoilRoot>
+    <Suspense fallback='Loading...'>
     <Router />
-  </Store>
+    </Suspense>
+  </RecoilRoot>
 );
 
 export default SeriesApp;

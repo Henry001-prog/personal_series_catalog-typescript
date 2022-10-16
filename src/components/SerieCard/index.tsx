@@ -7,21 +7,32 @@ import { useNavigation } from "@react-navigation/native";
 import { SerieFormScreenNavigationProp, SerieDetailScreenNavigationProp } from "../../types/navigation";
 
 type Props = {
-  serie: SeriesType
-  isFirstColumn: any
+  serie: {
+    _id?: string | null;
+    title: string;
+    gender: string;
+    rate: number | number[];
+    img64?: string;
+    description: string;
+    isLast?: boolean;
+    index?: number;
+  },
+  isFirstColumn: any;
+  index: number;
 }
 
 const SerieCard = ({
   serie,
-  isFirstColumn
+  isFirstColumn,
+  index
 }: Props) => {
 
   const navigation = useNavigation<SerieFormScreenNavigationProp>();
   return (
-    <SeriesCard isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie })}>
+    <SeriesCard isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
       <Card>
         <Image
-          serie={serie!.img64}
+          serie={serie.img64}
           source={{
             uri: `data:image/jpeg;base64,${serie.img64}`,
           }}

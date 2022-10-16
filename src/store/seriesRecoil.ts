@@ -1,31 +1,62 @@
 import firebase from "firebase/app";
 import "@firebase/database";
 import { Alert } from "react-native";
-import { atom } from "jotai";
+import {
+  atom,
+  atomFamily,
+  selector,
+  selectorFamily,
+} from "recoil";
 
 import { seriesApi } from "../services/api";
 
 import { SeriesType, MySeries } from "../interfaces/seriesType";
 import { MainScreenNavigationProp } from "../types/navigation";
+import { RecoilState } from "recoil";
+import { ISeries } from "../pages/SeriesPage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { api, oapi } = seriesApi;
 
-export const watchSeriesJotaiAtom = async (
-  email: string,
+// export const userApi = atom({
+//   key: "user",
+//   default: `/verify/${myEmail}`,
+// });
+
+// const seriesState = selector({
+//   key: "loader",
+//   get: async ({ get }) => {
+//     try {
+//       const url = get(userApi);
+//       const result = await oapi.get(url);
+
+//       return result.data;
+//     } catch (error) {
+//       console.log("Deu erro");
+//     }
+//   },
+// });
+
+export const listSeries = async (
+  uid: string,
   token: string
-): Promise<MySeries[] | undefined> => {
+): Promise<SeriesType[] | ISeries[] | undefined> => {
   try {
     // const result = await oapi.get(`/verify/${email}`);
     // const user = result.data;
     // const email = user.email;
     // const token = user.token;
     // console.warn("user: ", user.email);
-    const response = await api.get(`/series/${email}`, {
+    const response = await api.get(`/series/${uid}`, {
       params: {
         token: token,
       },
     });
-    const series = response.data;
+    console.warn('Minhas séries: ', response.data)
+    const series: SeriesType[] = response.data;
+    const userId = series.map((item, index) => item._id);
+    console.warn('Id do localstorage series: ', userId);
+    await AsyncStorage.setItem("id", JSON.stringify(userId));
     // console.warn("resposta: ", series);
     // setSeries(series);
     // setLoading(false);
@@ -50,19 +81,26 @@ export const watchSeriesJotaiAtom = async (
   }
 };
 
-export const watchSeriesJotai = atom<MySeries[] | undefined | {}>([]);
-export const isLoading = atom<boolean>(false);
+export const seriesState = atom<SeriesType[] | undefined>({
+  key: "listSeries",
+  default: [],
+});
+
+// export const watchSeriesJotai = atom<MySeries[] | undefined | {}>([]);
+// export const isLoading = atom<boolean>(false);
 
 // const navigation = useNavigation<MainScreenNavigationProp>();
 
 export const deleteSerie = (
-  serie: MySeries,
-  navigation: MainScreenNavigationProp
+  serie: SeriesType,
+  navigation: MainScreenNavigationProp,
+  token: string,
+  myId: string,
 ) => {
   return new Promise((resolve, reject) => {
     Alert.alert(
       "Deletar",
-      `Deseja deletar série ${serie.series.title}?`,
+      `Deseja deletar série ${serie.title}?`,
       [
         {
           text: "Não",
@@ -74,12 +112,18 @@ export const deleteSerie = (
         {
           text: "Sim",
           onPress: async () => {
-            const { currentUser } = firebase.auth();
+            // const { currentUser } = firebase.auth();
             try {
-              await firebase
-                .database()
-                .ref(`/users/${currentUser!.uid}/series/${serie.series.id}`)
-                .remove();
+              console.warn('delete: ', myId);
+              await api.delete(`/series/${myId}`, {
+                params: {
+                  token: token
+                }
+              });
+              // await firebase
+              //   .database()
+              //   .ref(`/users/${currentUser!.uid}/series/${serie.series.id}`)
+              //   .remove();
               resolve(true);
               navigation.goBack();
             } catch (e) {

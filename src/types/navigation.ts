@@ -3,9 +3,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export type RootStackParamList = {
   Login: undefined;
-  Main: undefined;
+  Main: { user: any };
   SerieDetail?: { serie: SeriesType };
-  SerieForm?: { serieToEdit: SeriesType };
+  SerieForm?: { serieToEdit: SeriesType, index: number; };
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

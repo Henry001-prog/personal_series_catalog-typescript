@@ -8,7 +8,7 @@ interface FirstColumn {
 }
 
 interface ISerie {
-  serie: string
+  serie?: string
   aspectRatio: number
 }
 

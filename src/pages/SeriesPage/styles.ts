@@ -12,6 +12,7 @@ export const ViewLoading = styled.View`
 export const Loading = styled.ActivityIndicator``;
 
 export const Container = styled.View`
+  height: 100%;
   background-color: #252535;
   align-items: center;
   justify-content: center;
@@ -48,7 +49,7 @@ export const ViewButtonNew = styled.View`
   border-radius: 100px;
 `;
 
-console.warn('Width: ', width);
+// console.warn('Width: ', width);
 
 export const Button = styled.TouchableOpacity`
   justify-content: center;

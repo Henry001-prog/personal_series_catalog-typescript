@@ -4,6 +4,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Slider } from "@miblanchard/react-native-slider";
 import { View, TextInput as RNTextInput, TextInputProps } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import uuid from "react-native-uuid";
 
 import {
   KeyboardAvoidingView,
@@ -27,42 +28,97 @@ import {
 import FormRow from "../../components/FormRow";
 
 import { useAtom } from "jotai";
-import { setFieldAtom, saveSerie } from "../../storeJotai/serieFormAtom";
+import {
+  setFieldAtom,
+  saveSerie,
+  userId,
+  serieIndex,
+} from "../../store/serieFormRecoil";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { MainScreenNavigationProp } from "../../types/navigation";
+import {
+  emailRecoil as emailRecoilState,
+  ILogin,
+  myUserState,
+  userState,
+} from "../../store/userRecoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { SeriesType } from "../../interfaces/seriesType";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type StackParamsList = {
   SerieForm: {
-    serieToEdit: string;
+    serieToEdit: SeriesType;
+    index: number;
   };
 };
 
 export default function SerieFormPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [serieFormAtom, setSerieFormAtom] = useAtom(setFieldAtom);
+  const [serieFormAtom, setSerieFormAtom] =
+    useRecoilState<SeriesType>(setFieldAtom);
+  const [myFilterId, setMyFilterId] = useRecoilState<number>(serieIndex);
+  const [user, setUser] = useRecoilState(myUserState);
+  const [myId, setMyId] = useRecoilState(userId);
+  const resetForm = useResetRecoilState(setFieldAtom);
 
   const route = useRoute<RouteProp<StackParamsList, "SerieForm">>();
   const navigation = useNavigation<MainScreenNavigationProp>();
+  console.warn("filter id: ", myFilterId);
+
+  // const user: ILogin = useRecoilValue(userState); // colocar no arquivo types
+
+  // console.warn('SerieForm: ', user);
 
   // const { serie } = route.params;
 
   const input2Ref = useRef<RNTextInput & TextInputProps>(null);
 
+  const uid = uuid.v4();
+  // console.warn('uid: ', uid);
+
   useEffect(() => {
     const { params } = route;
     if (params && params.serieToEdit) {
       const serieToEdit = params.serieToEdit;
-      setSerieFormAtom({
-        type: "setWholeSerieJotai",
-        serieToEdit: serieToEdit,
-      });
+      setSerieFormAtom(serieToEdit);
     } else {
-      setSerieFormAtom({ type: "setResetFormAtom" });
+      resetForm();
     }
   }, [route, setSerieFormAtom]);
+
+  useEffect(() => {
+    async function getStorage() {
+      const jsonValue = await AsyncStorage.getItem("id");
+      const validateValueJson =
+        jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.warn("Id do localstorage: ", String(validateValueJson));
+      
+      
+      setMyId(String(validateValueJson));
+      
+    }
+    // const { params } = route;
+    // const testParams = !params.index ? 0 : params.index
+    getStorage();
+  }, []);
+
+  useEffect(() => {
+    async function getIndex() {
+      const jsonValue = await AsyncStorage.getItem("id");
+      const validateValueJson =
+        jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.warn("Id do localstorage: ", validateValueJson);
+      const { params } = route;
+      const myIndex = params.index;
+      const filterId = validateValueJson.find((item: any, index: any) => index == myIndex);
+      setMyFilterId(filterId != null ? filterId : 100);
+    }
+    if (route.params) getIndex();
+  }, []);
 
   async function pickImage() {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -79,7 +135,7 @@ export default function SerieFormPage() {
     });
 
     if (!result.cancelled) {
-      setSerieFormAtom({ field: "img64", value: result.base64 });
+      setSerieFormAtom({ ...serieFormAtom, img64: result.base64 });
       console.log("Aqui temos uma imagem!", result.base64);
     }
   }
@@ -126,13 +182,13 @@ export default function SerieFormPage() {
             placeholderTextColor="#808080"
             value={serieFormAtom.title}
             onChangeText={(value) =>
-              setSerieFormAtom({ field: "title", value: value })
+              setSerieFormAtom({ ...serieFormAtom, title: value })
             }
             onSubmitEditing={() => input2Ref.current!.focus()}
           />
         </FormRow>
 
-        <FormRow>
+        {/*<FormRow>
           {serieFormAtom.img64 ? (
             <ImageBackground
               source={{
@@ -149,7 +205,7 @@ export default function SerieFormPage() {
               <Text>Selecione uma imagem</Text>
             </Button>
           </ViewButtonImage>
-        </FormRow>
+          </FormRow>*/}
 
         <FormRow>
           <PickerContainer>
@@ -159,7 +215,7 @@ export default function SerieFormPage() {
               }}
               selectedValue={serieFormAtom.gender}
               onValueChange={(itemValue) =>
-                setSerieFormAtom({ field: "gender", value: itemValue })
+                setSerieFormAtom({ ...serieFormAtom, gender: itemValue })
               }
             >
               <Picker.Item label="Policial" value="Policial" color="#808080" />
@@ -194,7 +250,7 @@ export default function SerieFormPage() {
               maximumTrackTintColor="transparent"
               thumbTintColor="white"
               onValueChange={(value) =>
-                setSerieFormAtom({ field: "rate", value: value })
+                setSerieFormAtom({ ...serieFormAtom, rate: Number(value) })
               }
               value={serieFormAtom.rate}
               minimumValue={0}
@@ -210,13 +266,14 @@ export default function SerieFormPage() {
             placeholderTextColor="#808080"
             value={serieFormAtom.description}
             onChangeText={(value: string) =>
-              setSerieFormAtom({ field: "description", value: value })
+              setSerieFormAtom({ ...serieFormAtom, description: value })
             }
             ref={input2Ref}
             numberOfLines={4}
             multiline={true}
           />
         </FormRow>
+
         {isLoading ? (
           <Loading color="light-blue" size="large" />
         ) : (
@@ -225,8 +282,14 @@ export default function SerieFormPage() {
               onPress={async () => {
                 setIsLoading(true);
                 try {
-                  await saveSerie(serieFormAtom);
-                  setSerieFormAtom({ type: "setResetFormAtom" });
+                  await saveSerie(
+                    serieFormAtom,
+                    user.email,
+                    user.token,
+                    user.uid,
+                    myFilterId
+                  );
+                  resetForm();
                   navigation.goBack();
                 } catch (error: any) {
                   Alert.alert("Erro!", error.message);
@@ -240,13 +303,13 @@ export default function SerieFormPage() {
           </ViewButton>
         )}
 
-        {serieFormAtom.id ? (
+        {serieFormAtom._id ? (
           <View style={{ marginBottom: 100 }}></View>
         ) : (
           <ViewButtonClean>
             <ButtonClean
               onPress={() => {
-                setSerieFormAtom({ type: "setResetFormAtom" });
+                resetForm();
               }}
             >
               <Text>Limpar Formulário</Text>
