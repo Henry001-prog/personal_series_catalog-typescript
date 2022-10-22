@@ -5,7 +5,7 @@ import { Slider } from "@miblanchard/react-native-slider";
 import { View, TextInput as RNTextInput, TextInputProps } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import uuid from "react-native-uuid";
-import Buffer from 'buffer';
+import Buffer from "buffer";
 
 import {
   KeyboardAvoidingView,
@@ -54,8 +54,8 @@ import {
 import { seriesApi } from "../../services/api";
 import { SeriesType } from "../../interfaces/seriesType";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 
 type StackParamsList = {
   SerieForm: {
@@ -68,21 +68,15 @@ export default function SerieFormPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [serieFormAtom, setSerieFormAtom] =
     useRecoilState<SeriesType>(setFieldAtom);
-  const [sendImage, setSendImage] = useRecoilState(postImageState);
   const [myFilterId, setMyFilterId] = useRecoilState<number>(serieIndex);
   const [user, setUser] = useRecoilState(myUserState);
   const [myId, setMyId] = useRecoilState(userId);
   const resetForm = useResetRecoilState(setFieldAtom);
 
-  // const resImage = useRecoilValue(postImage);
-  const { api } = seriesApi;
-
   const route = useRoute<RouteProp<StackParamsList, "SerieForm">>();
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const input2Ref = useRef<RNTextInput & TextInputProps>(null);
-
-  const uid = uuid.v4();
 
   useEffect(() => {
     const { params } = route;
@@ -102,8 +96,6 @@ export default function SerieFormPage() {
 
       setMyId(String(validateValueJson));
     }
-    // const { params } = route;
-    // const testParams = !params.index ? 0 : params.index
     getStorage();
   }, []);
 
@@ -132,66 +124,11 @@ export default function SerieFormPage() {
     const result = await ImagePicker.launchImageLibraryAsync({
       quality: 0.3,
       base64: true,
+      // allowsEditing: true,
       aspect: [1, 1], // Android only
     });
 
-    
-      // let result2 = await DocumentPicker.getDocumentAsync({ type: "*/*", copyToCacheDirectory: true }).then(response => {
-      //     if (response.type == 'success') {          
-      //       let { name, size, uri } = response;
-      //       let nameParts = name.split('.');
-      //       let fileType = nameParts[nameParts.length - 1];
-      //       var fileToUpload = {
-      //         name: name,
-      //         size: size,
-      //         uri: uri,
-      //         type: "application/" + fileType
-      //       };
-            
-      //       console.log(fileToUpload, '...............file')
-      //       setSendImage(fileToUpload);
-      //     } 
-      //   });
-      //   console.warn("Doc: " + sendImage);
-      // console.log(result);
-
     if (!result.cancelled) {
-      // const fileName = result.uri.split('/').pop();
-      // const fileType = fileName!.split('.').pop();
-      // console.log(fileName, fileType);
-      // setSendImage(result.uri);
-      // const filename = result2.uri.split("/").pop();
-
-      // Infer the type of the image
-      // const match = /\.(\w+)$/.exec(filename!);
-      // const formatedImage = match ? `image/${match[1]}` : `image`;
-      const formData = new FormData();
-      // formData.append('image', fileName);
-      // const headers = {
-      //   'headers': {
-      //     'Content-Type': 'multipart/form-data',
-      //   }
-      // }
-      // const resultImage = await api.post("/img", formData, headers);
-      const uploadResult = await FileSystem.uploadAsync('http://192.168.0.108:3002/api/img', result.uri, {
-      httpMethod: 'POST',
-      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-      fieldName: 'image'
-    });
-    const fileNameOne = JSON.parse(uploadResult.body);
-    // const test = fileNameOne.buffer.data
-    // const fileNameTwo = JSON.parse(fileNameOne.buffer);
-    // console.warn('form1:', fileNameOne.buffer);
-      // console.warn('form2:', fileNameOne.buffer.data);
-
-      // // const buffer = new ArrayBuffer(test);
-      // const binaryString = Array.from(new Uint8Array(test), byte => String.fromCharCode(byte)).join("");
-      // const theImage = Buffer.from(test, 'binary').toString('base64');
-      // const base64String = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
-      // const image = fileNameOne.buffer.data.toString('base64');
-      console.warn('Imagem convertida: ', fileNameOne.result2);
-      // setResponseImage(resultImage.data);
       setSerieFormAtom({ ...serieFormAtom, img: result.base64 });
     }
   }
@@ -338,15 +275,15 @@ export default function SerieFormPage() {
               onPress={async () => {
                 setIsLoading(true);
                 try {
-                    await saveSerie(
-                      serieFormAtom,
-                      user.email,
-                      user.token,
-                      user.uid,
-                      myFilterId
-                    );
-                    resetForm();
-                    navigation.goBack();
+                  await saveSerie(
+                    serieFormAtom,
+                    user.email,
+                    user.token,
+                    user.uid,
+                    myFilterId
+                  );
+                  resetForm();
+                  navigation.goBack();
                 } catch (error: any) {
                   Alert.alert("Erro!", error.message);
                 } finally {
