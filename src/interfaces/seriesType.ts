@@ -4,7 +4,7 @@ export interface SeriesType {
   title: string;
   gender: string;
   rate: number | number[];
-  img64?: string;
+  img?: string;
   description: string;
   isLast?: boolean;
 }

@@ -115,14 +115,6 @@ export default function SeriesPage(
   const userParams = routerParams.params.user || useRecoilValue(userState);
 
   const user = route || useRecoilValue(userState);
-  console.warn("puto: ", user);
-  console.warn("SeriePage: ", user);
-  // console.warn('SeriePage: ', apiI);
-
-  // const user: ILogin = useRecoilValue(userState);
-  // console.warn("SeriePage112: ", myUser);
-  // console.warn("SeriePagereal: ", series);
-  // console.warn("SeriePageId: ", id);
 
   const resetEmail = useResetRecoilState(emailRecoil);
   const resetPassword = useResetRecoilState(passwordRecoil);

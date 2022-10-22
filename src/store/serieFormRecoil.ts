@@ -1,38 +1,13 @@
 import firebase from "firebase/app";
 import "@firebase/database";
-import {
-  atom,
-  atomFamily,
-  RecoilState,
-  selector,
-  selectorFamily,
-} from "recoil";
+import { atom, selector } from "recoil";
 import { atomWithReducer } from "jotai/utils";
 import { seriesApi } from "../services/api";
 import { userState } from "./userRecoil";
 
-import { SeriesType, IAction, MySeries } from "../interfaces/seriesType";
+import { SeriesType } from "../interfaces/seriesType";
 
-// const INITIAL_STATE: any = {
-//   title: "",
-//   img64: '',
-//   gender: "Policial",
-//   rate: 0,
-//   description: "",
-// };
-
-// export const formReducer = (state = INITIAL_STATE, action: IAction) => {
-//   // if (action.type === "setWholeSerieJotai") {
-//   //   return action.serieToEdit;
-//   // } else if (action.type === "setResetFormAtom") {
-//   //   return INITIAL_STATE;
-//   // } else {
-//     const newState = { ...state };
-//     newState[action.field!] = action.value;
-//     console.log(newState);
-//     return newState;
-//   // }
-// };
+const { api } = seriesApi;
 
 export const isLoading = atom({
   key: "loadingKey",
@@ -41,7 +16,7 @@ export const isLoading = atom({
 
 export const userId = atom({
   key: "userid",
-  default: '',
+  default: "",
 });
 
 export const serieIndex = atom({
@@ -49,27 +24,41 @@ export const serieIndex = atom({
   default: 0,
 });
 
-// export const formState = selector({
-//   key: "loader",
-//   get: async ({ get }) => {
-//     const newState = { ...state };
-//     newState[action.field!] = action.value;
-//     console.log(newState);
-//     return newState;
-//   },
-// });
+export const postImageState = atom({
+  key: "postimagestate",
+  default: "",
+});
+
+export const getImageState = atom({
+  key: "getimagestate",
+  default: "",
+});
+
+export const postImage = selector({
+  key: "loaderForm",
+  get: async ({ get }) => {
+    try {
+      const url = get(postImageState);
+      const result = await api.post(url);
+
+      const resultImage = result.data;
+      return resultImage;
+    } catch (error) {
+      console.log("Deu erro");
+    }
+  },
+});
 
 export const setFieldAtom = atom<SeriesType>({
-  key: 'form',
+  key: "form",
   default: {
-    title: '',
+    title: "",
+    img: "",
     gender: "Policial",
     rate: 0,
-    // img64: '',
     description: "",
   },
 });
-// console.log('teste: ', setFieldAtom);
 
 export const saveSerie = async (
   serie: SeriesType,
@@ -80,26 +69,7 @@ export const saveSerie = async (
 ) => {
   try {
     const { api, oapi } = seriesApi;
-    console.warn('save: ', serie);
-    async function results() {
-      // const user = {
-      //   "email": "henry@mail.com",
-      //   "password": "$Al123123"
-      // }
-      //     const uid = await oapi.post("/login", {user});
-      //     console.warn('user: ', uid);
-      //   const result = await oapi.get(`/verify/${email}`);
-      //   const user = result.data;
-      //   const test = {
-      //     uid: user.email,
-      //     series: serie,
-      //   };
-      //   console.warn("Série: ", test);
-      //   const { token } = user;
-    }
-    results();
     if (serie._id) {
-      console.warn('save2: ', serie);
       await api.put(
         `/series/${myId}`,
         { series: serie },
@@ -109,11 +79,9 @@ export const saveSerie = async (
           },
         }
       );
-      //   await db.ref(`/users/${currentUser!.uid}/series/${serie.id}`).set(serie);
     } else {
-      console.warn('save3: ', serie);
       await api.post(
-        '/series',
+        "/series",
         { uid: uid, series: serie },
         {
           params: {
@@ -121,7 +89,6 @@ export const saveSerie = async (
           },
         }
       );
-      //   await db.ref(`/users/${currentUser!.uid}/series`).push(serie);
     }
   } catch (e) {
     console.log("deu algum erro!");

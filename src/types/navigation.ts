@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export type RootStackParamList = {
   Login: undefined;
   Main: { user: any };
-  SerieDetail?: { serie: SeriesType };
+  SerieDetail?: { serie: SeriesType, index?: number };
   SerieForm?: { serieToEdit: SeriesType, index: number; };
 };
 

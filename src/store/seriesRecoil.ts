@@ -52,10 +52,10 @@ export const listSeries = async (
         token: token,
       },
     });
-    console.warn('Minhas séries: ', response.data)
+    // console.warn('Minhas séries: ', response.data)
     const series: SeriesType[] = response.data;
     const userId = series.map((item, index) => item._id);
-    console.warn('Id do localstorage series: ', userId);
+    // console.warn('Id do localstorage series: ', userId);
     await AsyncStorage.setItem("id", JSON.stringify(userId));
     // console.warn("resposta: ", series);
     // setSeries(series);

@@ -7,16 +7,12 @@ import {
 } from "../types/navigation";
 import {
   atom,
-  atomFamily,
   RecoilState,
   selector,
-  selectorFamily,
 } from "recoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { seriesApi } from "../services/api";
-
-// export const isLoading = atom<boolean>(false);
 export interface ILogin {
   email: string;
   password: string;
@@ -46,28 +42,9 @@ export const isLoading: RecoilState<boolean> = atom({
   default: false,
 });
 
-async function results(): Promise<ILogin | void> {
-  // const user = {
-  //   "email": "henry@mail.com",
-  //   "password": "$Al123123"
-  // }
-  //     const uid = await oapi.post("/login", {user});
-  //     console.warn('user: ', uid);
-  if (emailRecoil === null) {
-    const result = await oapi.get(`/verify/${emailRecoil}`);
-    console.warn("userRecoil: ", result);
-    const user: ILogin = result.data.email;
-    console.warn("aqui: ", user);
-    return user;
-  }
-  return;
-}
-
-const myEmail = results();
-
 export const userApi = atom({
   key: "user",
-  default: `/verify/${"test9@mail.com"}`,
+  default: `/verify/${emailRecoil}`,
 });
 
 export const myUserState = atom({
@@ -78,11 +55,6 @@ export const myUserState = atom({
     token: "",
   },
 });
-
-// export const userApi = atom({
-//   key: "user",
-//   default: `/verify/${'test4@mail.com'}`,
-// });
 
 export const userState = selector({
   key: "loader",
@@ -99,29 +71,6 @@ export const userState = selector({
     }
   },
 });
-
-// const industriesLoaderI = selector<ILogin>({
-//     key: 'industriesLoader',
-//     get: async () => {
-//       const test = await oapi.post("/login", { email, password });
-//       return test.data;
-//     },
-//   })
-
-// export const email = atom<string>('');
-// export const password = atom<string>('');
-
-// console.log('Console email: ', email);
-// console.warn('Console password: ', password);
-
-// export const loginUser = async () => {
-//   const result = await oapi.post("/login", { email, password });
-//   const user = result.data;
-//   return user;
-// };
-
-// const test = loginUser();
-// console.warn('Console test: ', test);
 
 export const tryLogin = async (
   email: string,

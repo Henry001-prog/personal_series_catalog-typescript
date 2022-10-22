@@ -34,7 +34,7 @@ type StackParamsList = {
       title: string;
       gender: string;
       rate: number;
-      img64: string;
+      img: string;
       description: string;
     };
     index: number;
@@ -62,14 +62,12 @@ export default function SerieDetailPage() {
   const { replace }  = useNavigation<SerieFormScreenNavigationProp>();
   const navigation  = useNavigation<MainScreenNavigationProp>();
   const route = useRoute<RouteProp<StackParamsList, "SerieDetail">>();
-  console.warn("Id filtrado: ", String(myFilterId));
 
   useEffect(() => {
     async function getIndex() {
       const jsonValue = await AsyncStorage.getItem("id");
       const validateValueJson =
         jsonValue != null ? JSON.parse(jsonValue) : null;
-      console.warn("Id do localstorage: ", validateValueJson);
       const { params } = route;
       const myIndex = params.index;
       const filterId = validateValueJson.find((item: any, index: any) => index == myIndex);
@@ -80,13 +78,12 @@ export default function SerieDetailPage() {
 
   const { serie } = route.params;
   const { index } = route.params;
-  console.warn('index: ', index != null ? index : '')
   return (
     <ScrollView>
-      {/*serie.img64 ? (
+      {serie.img ? (
         <Image
           source={{
-            uri: `data:image/jpeg;base64,${serie.img64}`,
+            uri: `data:image/jpeg;base64,${serie.img}`,
           }}
         >
           <LinearGradient
@@ -105,7 +102,7 @@ export default function SerieDetailPage() {
             }}
           ></LinearGradient>
         </Image>
-          ) : null*/}
+          ) : null}
       <Title>{serie.title}</Title>
 
       <ContainerRate>

@@ -12,7 +12,7 @@ type Props = {
     title: string;
     gender: string;
     rate: number | number[];
-    img64?: string;
+    img?: string;
     description: string;
     isLast?: boolean;
     index?: number;
@@ -32,9 +32,9 @@ const SerieCard = ({
     <SeriesCard isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
       <Card>
         <Image
-          serie={serie.img64}
+          serie={serie.img}
           source={{
-            uri: `data:image/jpeg;base64,${serie.img64}`,
+            uri: `data:image/jpeg;base64,${serie.img}`,
           }}
           aspectRatio={1}
           resizeMode="stretch"
