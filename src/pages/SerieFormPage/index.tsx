@@ -122,9 +122,9 @@ export default function SerieFormPage() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      quality: 0.3,
+      quality: 0.2,
       base64: true,
-      // allowsEditing: true,
+      allowsEditing: true,
       aspect: [1, 1], // Android only
     });
 
