@@ -41,19 +41,6 @@ type StackParamsList = {
   };
 };
 
-// interface RouteParams extends RouteProp<ParamListBase, string> {
-//   params: {
-//     serie: {
-//       id: null;
-//       title: string;
-//       gender: string;
-//       rate: number;
-//       img64: string;
-//       description: string;
-//     };
-//   }
-// }
-
 export default function SerieDetailPage() {
   const [loading, setLoading] = useRecoilState<boolean>(isLoading);
   const [user, setUser] = useRecoilState(myUserState);
