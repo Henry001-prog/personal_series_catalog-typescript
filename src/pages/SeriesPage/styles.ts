@@ -51,8 +51,6 @@ export const ViewButtonNew = styled.View`
   border-radius: 100px;
 `;
 
-// console.warn('Width: ', width);
-
 export const Button = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;

@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Keyboard,
   TextInput as RNTextInput,
   TextInputProps,
 } from "react-native";
-import firebase from "firebase";
 
-// import { tryLogin, email as emailAtom, password as passwordAtom, isLoading } from "../../storeJotai/userAtom";
 import { unstable_createStore, useAtom } from "jotai";
 
 import {
@@ -40,7 +38,6 @@ export default function LoginPage() {
   const [loading, setIsLoading] = useRecoilState<boolean>(isLoading);
   const [createValidate, setCreateValidate] = useState<boolean>(false);
   const [user, setUser] = useState<void>();
-  // console.warn('Api: ', email);
 
   const resetEmail = useResetRecoilState(emailRecoilState);
   const resetPassword = useResetRecoilState(passwordRecoilState);
@@ -50,23 +47,6 @@ export default function LoginPage() {
 
   const input2Ref = useRef<RNTextInput & TextInputProps>(null);
   const input3Ref = useRef<RNTextInput & TextInputProps>(null);
-
-  // useEffect(() => {
-  //   const firebaseConfig = {
-  //     apiKey: "AIzaSyCsNst_gYIg6AUwqqx-YVRZepywsNL_xI0",
-  //     authDomain: "series-b92be.firebaseapp.com",
-  //     databaseURL: "https://series-b92be.firebaseio.com",
-  //     projectId: "series-b92be",
-  //     storageBucket: "series-b92be.appspot.com",
-  //     messagingSenderId: "828328217426",
-  //     appId: "1:828328217426:web:52c7133173d11a64a3888b",
-  //     measurementId: "G-EP4S5RF9SK",
-  //   };
-  //   // Initialize Firebase
-  //   if (!firebase.apps.length) {
-  //     firebase.initializeApp(firebaseConfig);
-  //   }
-  // }, []);
 
   async function login() {
     const data = await tryLogin(
@@ -78,8 +58,6 @@ export default function LoginPage() {
       setIsLoading
     );
     setUser(data);
-    // console.warn('Res: ', data);
-    // await tryLogin(email, password, navigation, setIsLoading)
   }
 
   function renderButton() {
@@ -95,10 +73,6 @@ export default function LoginPage() {
       </Button>
     );
   }
-
-  // const values = data.map((item, index) => (
-  //   <Text key={index}>{item.title}</Text>
-  // ));
 
   return (
     <KeyboardAvoidingView accessible={false} enabled>

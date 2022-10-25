@@ -1,11 +1,8 @@
-import firebase from "firebase/app";
-import "@firebase/database";
 import { atom, selector } from "recoil";
-import { atomWithReducer } from "jotai/utils";
 import { seriesApi } from "../services/api";
-import { userState } from "./userRecoil";
 
 import { SeriesType } from "../interfaces/seriesType";
+import { Alert } from "react-native";
 
 const { api } = seriesApi;
 
@@ -44,7 +41,6 @@ export const postImage = selector({
       const resultImage = result.data;
       return resultImage;
     } catch (error) {
-      console.log("Deu erro");
     }
   },
 });
@@ -91,6 +87,6 @@ export const saveSerie = async (
       );
     }
   } catch (e) {
-    console.log("deu algum erro!");
+    Alert.alert("Erro ao criar a nova série, tente novamente mais tarde");
   }
 };
