@@ -2,6 +2,10 @@ import styled from "styled-components/native";
 import { FlatList, ListRenderItemInfo } from 'react-native';
 import { Dimensions } from 'react-native';
 
+interface ISize {
+  sizeE: number;
+};
+
 const { width, height } = Dimensions.get('window');
 
 export const ViewLoading = styled.View`
@@ -14,22 +18,20 @@ export const Loading = styled.ActivityIndicator``;
 export const Container = styled.View`
   height: 100%;
   background-color: #252535;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 `;
 
 export const ViewList = (styled.FlatList`
 `as unknown) as typeof FlatList;
 
 export const ViewTop = styled.View`
-  margin-top: 30%;
+  margin-top: 28%;
 `;
 
-export const ViewButton = styled.View`
-  align-items: center;
-  justify-content: flex-end;
-  padding-top: 15%;
-  height: 0px;
+export const ViewAdjust = styled.View<ISize>`
+  right: ${(props) =>
+    props.sizeE === 1 ? "15%" : "0%"};;
 `;
 
 export const ViewButtonTwo = styled.View`
@@ -40,7 +42,7 @@ export const ViewButtonTwo = styled.View`
 `;
 
 export const ViewBottom = styled.View`
-  margin-bottom: 30px;
+  margin-bottom: 80px;
 `;
 
 export const ViewButtonNew = styled.View`
@@ -56,10 +58,12 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   background-color: #007fff;
   border-radius: 100px;
-  height: ${width > 400 ? '12.2%' : '9.45%'};
-  width: ${width > 400 ? '20.5%' : '21.5%'};
-  top: ${width > 400 ? '-2.8%' : '-12.54%'};
+  height: ${width > 400 ? '10.2%' : '7.45%'};
+  width: ${width > 400 ? '17%' : '18%'};
   margin-left: 0.15%;
+  position: absolute;
+  bottom: 1.5%;
+
 `;
 
 export const Text = styled.Text`

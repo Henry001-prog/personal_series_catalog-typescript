@@ -47,6 +47,7 @@ export const listSeries = async (
     // const email = user.email;
     // const token = user.token;
     // console.warn("user: ", user.email);
+    console.warn('uid: ', uid)
     const response = await api.get(`/series/${uid}`, {
       params: {
         token: token,

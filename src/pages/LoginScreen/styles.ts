@@ -7,10 +7,29 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const scale = SCREEN_WIDTH / 320;
 const width = Dimensions.get("window").width;
 
+export const KeyboardAvoidingView = styled.KeyboardAvoidingView.attrs({
+  enabled: Platform.OS === 'ios',
+  behavior: 'padding',
+  backgroundColor: "white", 
+  flex: 1
+})``;
+
+export const ScrollView = styled.ScrollView.attrs({
+  contentContainerStyle: {
+    flexGrow: 1,
+  },
+  keyboardShouldPersistTaps: 'handled',
+  showsVerticalScrollIndicator: false,
+  enabled: Platform.OS === 'ios',
+  behavior: 'padding',
+})`
+  background-color: #252535;
+`;
+
 export const Div = styled.View.attrs({
   paddingHorizontal: 20,
 })`
-  flex: 1;
+  height: 100%;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -43,15 +62,27 @@ export const Input = styled(TextInput).attrs({
   height: 60px;
 `;
 
-export const Loading = styled.ActivityIndicator``;
+export const Loading = styled.ActivityIndicator`
+  padding-top: 5%;
+`;
 
 export const Button = styled.TouchableOpacity`
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 20px;
   align-items: center;
   border-radius: 10px;
   width: 86.7%;
   background-color: #007fff;
+  height: 55px;
+  border: 1px solid #d0d0d0;
+`;
+
+export const CreateButton = styled.TouchableOpacity`
+  justify-content: center;
+  margin-top: 10px;
+  align-items: center;
+  border-radius: 10px;
+  width: 86.7%;
   height: 55px;
   border: 1px solid #d0d0d0;
 `;
@@ -62,6 +93,14 @@ export const TextButton = styled.Text`
   justify-content: center;
   flex-direction: row;
   color: white;
+`;
+
+export const CreateTextButton = styled.Text`
+  font-size: 17px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  color: #007fff;
 `;
 
 export const ViewErrorMessage = styled.View`

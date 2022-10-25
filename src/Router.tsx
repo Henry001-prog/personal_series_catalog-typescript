@@ -12,7 +12,7 @@ import SerieFormPage from "./pages/SerieFormPage";
 
 import { logout } from "./store/userRecoil";
 
-import { setFieldAtom, isLoading, formReducer } from "./store/serieFormRecoil";
+import { setFieldAtom, isLoading } from "./store/serieFormRecoil";
 
 import { View, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";

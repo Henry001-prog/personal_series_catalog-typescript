@@ -3,17 +3,19 @@ import { Dimensions } from "react-native";
 import { SeriesType } from "../../interfaces/seriesType";
 
 interface FirstColumn {
-  onPress: any
-  isFirstColumn: boolean
+  onPress: any;
+  isFirstColumn: boolean;
+  sizeE: number;
 }
 
 interface ISerie {
-  serie?: string
-  aspectRatio: number
+  serie?: string;
+  aspectRatio: number;
 }
 
 export const SeriesCard = styled.TouchableOpacity<FirstColumn>`
-  width: 50%;
+  width: ${(props) =>
+    props.sizeE === 1 ? "70%" : "50%"};
   padding: ${(props) =>
     props.isFirstColumn ? "5px 5px 5px 10px" : "5px 10px 5px 5px"};
   height: ${Dimensions.get("window").width / 2}px;

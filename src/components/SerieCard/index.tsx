@@ -19,17 +19,19 @@ type Props = {
   },
   isFirstColumn: any;
   index: number;
+  sizeE: number;
 }
 
 const SerieCard = ({
   serie,
   isFirstColumn,
-  index
+  index,
+  sizeE
 }: Props) => {
 
   const navigation = useNavigation<SerieFormScreenNavigationProp>();
   return (
-    <SeriesCard isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
+    <SeriesCard sizeE={sizeE} isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
       <Card>
         <Image
           serie={serie.img}

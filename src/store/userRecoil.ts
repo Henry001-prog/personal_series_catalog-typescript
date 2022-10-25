@@ -75,11 +75,12 @@ export const userState = selector({
 export const tryLogin = async (
   email: string,
   password: string,
-  confirmPassword: string,
+  confirm_password: string,
   navigation: MainScreenNavigationProp,
-  setIsLoading: (value: boolean) => void
+  createValidate: boolean,
+  setIsLoading: (value: boolean) => void,
 ): Promise<void> => {
-  setIsLoading(true);
+  
   // function getMessageByErrorCode(errorCode: any) {
   //   switch (errorCode) {
   //     case "auth/wrong-password":
@@ -93,84 +94,183 @@ export const tryLogin = async (
   //       return "Erro desconhecido";
   //   }
   // }
-  try {
-    const user = await oapi.post("/login", { email, password });
-    const verifyUser = await oapi.get(`/verify/${email}`);
-    // const user = await firebase
-    //   .auth()
-    //   .signInWithEmailAndPassword(email, password);
-    setIsLoading(true);
-
-    if (user) {
-      const data = user.data;
-      const myUid = verifyUser.data;
-      const newData = { ...data, uid: myUid.uid };
-      await AsyncStorage.setItem("token", JSON.stringify(newData));
-
-      // const { email, token } = data;
-      navigation.replace("Main", {
-        user: newData,
-      });
-      return setIsLoading(false);
+  if (!createValidate) {
+    try {
+      setIsLoading(true);
+      const user = await oapi.post("/login", { email, password });
+      const verifyUser = await oapi.get(`/verify/${email}`);
+      // const user = await firebase
+      //   .auth()
+      //   .signInWithEmailAndPassword(email, password);
+  
+      if (user) {
+        const data = user.data;
+        const myUid = verifyUser.data;
+        const newData = { ...data, uid: myUid.uid };
+        await AsyncStorage.setItem("token", JSON.stringify(newData));
+  
+        // const { email, token } = data;
+        navigation.replace("Main", {
+          user: newData,
+        });
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      Alert.alert("Erro ao fazer o login, tente novamente mais tarde");
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  } catch (error: any) {
-    // getMessageByErrorCode(error.code);
-    console.warn("O erro: ", error.message);
-
-    async function createNewUser() {
-      // const result = await oapi.get(`/verify/${email}`);
-      // const user = result.data;
-      const createUser = await oapi.post("/signup", {
-        // name: user.name,
-        email,
-        password,
-        confirm_password: confirmPassword,
-      });
-    }
-
-    if (error.message === "Request failed with status code 404") {
-      return new Promise<void>((resolve: any, reject) => {
-        Alert.alert(
-          "Usuário não encontrado",
-          "Deseja criar um cadastro com as informações inseridas?",
-          [
-            {
-              text: "Não",
-              onPress: () => {
-                resolve();
-                setIsLoading(false);
+  } else {
+    try {
+      async function createNewUser() {
+        // const result = await oapi.get(`/verify/${email}`);
+        // const user = result.data;
+        const createUser = await oapi.post("/signup", {
+          // name: user.name,
+          email,
+          password,
+          confirm_password,
+        });
+        return createUser;
+      }
+  
+      if (createNewUser) {
+        return new Promise<void>((resolve: any, reject) => {
+          Alert.alert(
+            "Criar novo usuário",
+            "Deseja criar um cadastro com as informações inseridas?",
+            [
+              {
+                text: "Não",
+                onPress: () => {
+                  resolve();
+                  setIsLoading(false);
+                },
+                style: "cancel", // IOS
               },
-              style: "cancel", // IOS
-            },
-            {
-              text: "Sim",
-              onPress: async () => {
-                await createNewUser();
-                const user = await oapi.post("/login", { email, password });
-                const verifyUser = await oapi.get(`/verify/${email}`);
-
-                const data = user.data;
-                const myUid = verifyUser.data;
-                const newData = { ...data, uid: myUid.uid };
-                await AsyncStorage.setItem("token", JSON.stringify(newData));
-                // const createUser = await oapi.get(`/verify/${email}`);
-
-                // const data = createUser.data;
-                // console.warn("res: ", data);
-                setIsLoading(false);
-                navigation.replace("Main", {
-                  user: newData,
-                });
+              {
+                text: "Sim",
+                onPress: async () => {
+                  try {
+                    setIsLoading(true);
+                    const user = await createNewUser();
+                    console.warn('user: ', user)
+                    // const user = await oapi.post("/login", { email, password });
+                    const verifyUser = await oapi.get(`/verify/${email}`);
+    
+                    const data = user.data;
+                    const myUid = verifyUser.data;
+                    const newData = { ...data, uid: myUid.uid };
+                    await AsyncStorage.setItem("token", JSON.stringify(newData));
+                    // const createUser = await oapi.get(`/verify/${email}`);
+    
+                    // const data = createUser.data;
+                    // console.warn("res: ", data);
+                    navigation.replace("Main", {
+                      user: newData,
+                    });
+                  } catch (error) {
+                    Alert.alert("Erro ao criar o usuário, tente novamente mais tarde");
+                    setIsLoading(false);
+                  }
+                },
               },
-            },
-          ],
-          { cancelable: false }
-        );
-      });
+            ],
+            { cancelable: false }
+          );
+        });
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      Alert.alert("Erro ao criar o usuário, tente novamente mais tarde");
     }
-    return await Promise.reject(error);
   }
+
+
+
+
+
+  // try {
+  //   const user = await oapi.post("/login", { email, password });
+  //   const verifyUser = await oapi.get(`/verify/${email}`);
+  //   // const user = await firebase
+  //   //   .auth()
+  //   //   .signInWithEmailAndPassword(email, password);
+  //   setIsLoading(true);
+
+  //   if (user) {
+  //     const data = user.data;
+  //     const myUid = verifyUser.data;
+  //     const newData = { ...data, uid: myUid.uid };
+  //     await AsyncStorage.setItem("token", JSON.stringify(newData));
+
+  //     // const { email, token } = data;
+  //     navigation.replace("Main", {
+  //       user: newData,
+  //     });
+  //     return setIsLoading(false);
+  //   }
+  //   setIsLoading(false);
+  // } catch (error: any) {
+  //   // getMessageByErrorCode(error.code);
+  //   console.warn("O erro: ", error.message);
+
+  //   async function createNewUser() {
+  //     // const result = await oapi.get(`/verify/${email}`);
+  //     // const user = result.data;
+  //     const createUser = await oapi.post("/signup", {
+  //       // name: user.name,
+  //       email,
+  //       password,
+  //       confirm_password,
+  //     });
+  //     return createUser;
+  //   }
+  //   setIsLoading(false);
+
+  //   if (error.message === "Request failed with status code 401") {
+  //     return new Promise<void>((resolve: any, reject) => {
+  //       Alert.alert(
+  //         "Usuário não encontrado",
+  //         "Deseja criar um cadastro com as informações inseridas?",
+  //         [
+  //           {
+  //             text: "Não",
+  //             onPress: () => {
+  //               resolve();
+  //               setIsLoading(false);
+  //             },
+  //             style: "cancel", // IOS
+  //           },
+  //           {
+  //             text: "Sim",
+  //             onPress: async () => {
+  //               const user = await createNewUser();
+  //               console.warn('user: ', user)
+  //               // const user = await oapi.post("/login", { email, password });
+  //               const verifyUser = await oapi.get(`/verify/${email}`);
+
+  //               const data = user.data;
+  //               const myUid = verifyUser.data;
+  //               const newData = { ...data, uid: myUid.uid };
+  //               await AsyncStorage.setItem("token", JSON.stringify(newData));
+  //               // const createUser = await oapi.get(`/verify/${email}`);
+
+  //               // const data = createUser.data;
+  //               // console.warn("res: ", data);
+  //               setIsLoading(false);
+  //               navigation.replace("Main", {
+  //                 user: newData,
+  //               });
+  //             },
+  //           },
+  //         ],
+  //         { cancelable: false }
+  //       );
+  //     });
+  //   }
+  //   return await Promise.reject(error);
+  // }
 };
 
 export const myUser = async (email: string, password: string) => {};
