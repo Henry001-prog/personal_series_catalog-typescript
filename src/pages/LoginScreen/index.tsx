@@ -5,8 +5,6 @@ import {
   TextInputProps,
 } from "react-native";
 
-import { unstable_createStore, useAtom } from "jotai";
-
 import {
   Div,
   Form,
