@@ -1,4 +1,5 @@
 import React from "react";
+import { Text } from "react-native";
 
 import { SeriesCard, Card, Image, CardTitleWrapper, CardTitle } from "./styles";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -31,7 +32,8 @@ const SerieCard = ({
 
   const navigation = useNavigation<SerieFormScreenNavigationProp>();
   return (
-    <SeriesCard sizeE={sizeE} isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
+    <SeriesCard testID="cardId" sizeE={sizeE} isFirstColumn={isFirstColumn} onPress={() => navigation.navigate("SerieDetail", { serie: serie, index: index })}>
+      <Text>Teste!!!</Text>
       <Card>
         <Image
           serie={serie.img}

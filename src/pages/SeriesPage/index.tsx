@@ -29,8 +29,6 @@ import AddSerieCard from "../../components/AddSerieCard";
 
 import { listSeries, seriesState } from "../../store/seriesRecoil";
 import { isLoading } from "../../store/serieFormRecoil";
-import { myUser } from "../../storeJotai/userAtom";
-import { useAtom } from "jotai";
 
 import { seriesApi } from "../../services/api";
 
@@ -97,10 +95,7 @@ export interface ItemPage {
   index: number;
 }
 
-export default function SeriesPage(
-  navigation: SerieFormScreenNavigationProp | SerieDetailScreenNavigationProp,
-  route: IRoute
-) {
+export default function SeriesPage() {
   const [series, setSeries] = useRecoilState<SeriesType[] | undefined>(
     seriesState
   );
@@ -113,9 +108,6 @@ export default function SeriesPage(
   const { navigate } = useNavigation<SerieFormScreenNavigationProp>();
 
   const routerParams = useRoute<ParamsProps>() || "";
-  const userParams = routerParams.params.user || useRecoilValue(userState);
-
-  const user = route || useRecoilValue(userState);
 
   const resetEmail = useResetRecoilState(emailRecoil);
   const resetPassword = useResetRecoilState(passwordRecoil);
@@ -134,6 +126,7 @@ export default function SeriesPage(
         const jsonValue = await AsyncStorage.getItem("token");
         const validateValueJson =
           jsonValue != null ? JSON.parse(jsonValue) : null;
+          console.log('async object: ', validateValueJson)
         const response: ISeries[] | SeriesType[] | undefined = await listSeries(
           validateValueJson.uid,
           validateValueJson.token
@@ -150,7 +143,7 @@ export default function SeriesPage(
         }
         setMyUser(validateValueJson);
       } catch (e) {
-        // error reading value
+        console.log(e)
       }
 
       setLoading(false);
@@ -162,13 +155,16 @@ export default function SeriesPage(
   return (
     <Suspense fallback="Loading...">
       <Container>
+        <Text>Pegou!!!</Text>
         {Object.is(series, []) || loading ? (
           <ViewLoading>
             <Loading size="large" color="light-blue" />
           </ViewLoading>
         ) : (
           <ViewAdjust sizeE={series!.length}>
+            <Text>Pegou2!!!</Text>
             <ViewList
+              testID="list"
               data={series}
               renderItem={({ item, index }: Item) => (
                 <SerieCard
@@ -186,9 +182,9 @@ export default function SeriesPage(
             />
           </ViewAdjust>
         )}
-          <Button onPress={() => navigate("SerieForm")}>
-            <FontAwesome5 name="plus" size={38} color="white" />
-          </Button>
+        <Button onPress={() => navigate("SerieForm")}>
+          <FontAwesome5 name="plus" size={38} color="white" />
+        </Button>
       </Container>
     </Suspense>
   );

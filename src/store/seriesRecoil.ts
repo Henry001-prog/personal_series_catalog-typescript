@@ -1,5 +1,3 @@
-import firebase from "firebase/app";
-import "@firebase/database";
 import { Alert } from "react-native";
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
