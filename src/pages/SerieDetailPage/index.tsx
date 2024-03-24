@@ -23,7 +23,6 @@ import LongText from "../../components/LongText";
 import { isLoading, serieIndex } from "../../store/serieFormRecoil";
 import { useAtom } from "jotai";
 import { SeriesType } from "../../interfaces/seriesType";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import { myUserState } from "../../store/userRecoil";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -42,9 +41,9 @@ type StackParamsList = {
 };
 
 export default function SerieDetailPage() {
-  const [loading, setLoading] = useRecoilState<boolean>(isLoading);
-  const [user, setUser] = useRecoilState(myUserState);
-  const [myFilterId, setMyFilterId] = useRecoilState<number>(serieIndex);
+  const [loading, setLoading] = useAtom<boolean>(isLoading);
+  const [user, setUser] = useAtom(myUserState);
+  const [myFilterId, setMyFilterId] = useAtom<number>(serieIndex);
 
   const { replace }  = useNavigation<SerieFormScreenNavigationProp>();
   const navigation  = useNavigation<MainScreenNavigationProp>();

@@ -3,7 +3,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { useAtom } from "jotai";
+
 
 import LoginScreen from "./pages/LoginScreen";
 import SeriesPage from "./pages/SeriesPage";
@@ -16,7 +16,7 @@ import { setFieldAtom, isLoading } from "./store/serieFormRecoil";
 
 import { View, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useAtom } from "jotai";
 
 type RouteParamList = {
   Login: undefined;
@@ -36,10 +36,10 @@ type RouteParamList = {
 const Stack = createStackNavigator<RouteParamList>();
 
 export default function App() {
-  const [serieFormAtom, setSerieFormAtom] = useRecoilState(setFieldAtom);
-  const [loading, setLoading] = useRecoilState(isLoading);
+  const [serieFormAtom, setSerieFormAtom] = useAtom(setFieldAtom);
+  const [loading, setLoading] = useAtom(isLoading);
 
-  const resetForm = useResetRecoilState(setFieldAtom);
+  // const resetForm = useResetRecoilState(setFieldAtom);
 
   return (
     <NavigationContainer>
@@ -141,7 +141,13 @@ export default function App() {
                 <TouchableOpacity
                   onPress={() => {
                     setLoading(true);
-                    resetForm();
+                    setSerieFormAtom({
+                      title: "",
+                      img: "",
+                      gender: "Policial",
+                      rate: 0,
+                      description: "",
+                    });
                     navigation.goBack();
                   }}
                 >

@@ -44,18 +44,17 @@ import {
   emailRecoil as emailRecoilState,
   ILogin,
   myUserState,
-  userState,
 } from "../../store/userRecoil";
 import {
   postImageState,
   getImageState,
-  postImage,
 } from "../../store/serieFormRecoil";
 import { seriesApi } from "../../services/api";
 import { SeriesType } from "../../interfaces/seriesType";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+import { useAtom } from "jotai";
 
 type StackParamsList = {
   SerieForm: {
@@ -66,12 +65,11 @@ type StackParamsList = {
 
 export default function SerieFormPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [serieFormAtom, setSerieFormAtom] =
-    useRecoilState<SeriesType>(setFieldAtom);
-  const [myFilterId, setMyFilterId] = useRecoilState<number>(serieIndex);
-  const [user, setUser] = useRecoilState(myUserState);
-  const [myId, setMyId] = useRecoilState(userId);
-  const resetForm = useResetRecoilState(setFieldAtom);
+  const [serieFormAtom, setSerieFormAtom] = useAtom<SeriesType>(setFieldAtom);
+  const [myFilterId, setMyFilterId] = useAtom<number>(serieIndex);
+  const [user, setUser] = useAtom(myUserState);
+  const [myId, setMyId] = useAtom(userId);
+  // const resetForm = useResetRecoilState(setFieldAtom);
 
   const route = useRoute<RouteProp<StackParamsList, "SerieForm">>();
   const navigation = useNavigation<MainScreenNavigationProp>();
@@ -84,7 +82,13 @@ export default function SerieFormPage() {
       const serieToEdit = params.serieToEdit;
       setSerieFormAtom(serieToEdit);
     } else {
-      resetForm();
+      setSerieFormAtom({
+        title: "",
+        img: "",
+        gender: "Policial",
+        rate: 0,
+        description: "",
+      });
     }
   }, [route, setSerieFormAtom]);
 
@@ -114,24 +118,24 @@ export default function SerieFormPage() {
     if (route.params) getIndex();
   }, []);
 
-  async function pickImage() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Você precisa permitir o acesso!");
-      return;
-    }
+  // async function pickImage() {
+  //   const { status } = await Camera.requestCameraPermissionsAsync();
+  //   if (status !== "granted") {
+  //     Alert.alert("Você precisa permitir o acesso!");
+  //     return;
+  //   }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      quality: 0.2,
-      base64: true,
-      allowsEditing: true,
-      aspect: [1, 1], // Android only
-    });
+  //   const result = await ImagePicker.launchImageLibraryAsync({
+  //     quality: 0.2,
+  //     base64: true,
+  //     allowsEditing: true,
+  //     aspect: [1, 1], // Android only
+  //   });
 
-    if (!result.cancelled) {
-      setSerieFormAtom({ ...serieFormAtom, img: result.base64 });
-    }
-  }
+  //   if (!result.cancelled) {
+  //     setSerieFormAtom({ ...serieFormAtom, img: result.base64 });
+  //   }
+  // }
 
   const selectEvaluation = () => {
     switch (String(serieFormAtom.rate)) {
@@ -194,7 +198,7 @@ export default function SerieFormPage() {
             </IconContainer>
           )}
           <ViewButtonImage>
-            <Button onPress={() => pickImage()}>
+            <Button onPress={() => {}}>
               <Text>Selecione uma imagem</Text>
             </Button>
           </ViewButtonImage>
@@ -282,7 +286,13 @@ export default function SerieFormPage() {
                     user.uid,
                     myFilterId
                   );
-                  resetForm();
+                  setSerieFormAtom({
+                    title: "",
+                    img: "",
+                    gender: "Policial",
+                    rate: 0,
+                    description: "",
+                  });
                   navigation.goBack();
                 } catch (error: any) {
                   Alert.alert("Erro!", error.message);
@@ -302,7 +312,13 @@ export default function SerieFormPage() {
           <ViewButtonClean>
             <ButtonClean
               onPress={() => {
-                resetForm();
+                setSerieFormAtom({
+                  title: "",
+                  img: "",
+                  gender: "Policial",
+                  rate: 0,
+                  description: "",
+                });
               }}
             >
               <Text>Limpar Formulário</Text>

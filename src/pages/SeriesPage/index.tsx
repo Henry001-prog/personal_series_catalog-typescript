@@ -48,13 +48,12 @@ import {
   passwordRecoil as passwordRecoil,
   confirm_Password,
   ILogin,
-  userState,
   userApi,
   myUserState,
 } from "../../store/userRecoil";
 
 import { ParamListBase, RouteProp } from "@react-navigation/native";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useAtom, PrimitiveAtom } from "jotai";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface ParamsProps extends RouteProp<ParamListBase, string> {
@@ -96,27 +95,29 @@ export interface ItemPage {
 }
 
 export default function SeriesPage() {
-  const [series, setSeries] = useRecoilState<SeriesType[] | undefined>(
-    seriesState
-  );
-  const [email, setEmail] = useRecoilState<string>(emailRecoil);
+  // @ts-ignore
+  const [series, setSeries] = useAtom<SeriesType[] | undefined>(seriesState);
+  const [email, setEmail] = useAtom<string>(emailRecoil);
   const [id, setId] = useState<number[]>();
-  const [loading, setLoading] = useRecoilState(isLoading);
-  const [myUser, setMyUser] = useRecoilState(myUserState);
+  const [loading, setLoading] = useAtom(isLoading);
+  const [myUser, setMyUser] = useAtom(myUserState);
+  const [password, setPassword] = useAtom<string>(passwordRecoil);
+  const [confirmPassword, setConfirmPassword] = useAtom<string>(confirm_Password);
   const isFocused = useIsFocused();
 
   const { navigate } = useNavigation<SerieFormScreenNavigationProp>();
 
   const routerParams = useRoute<ParamsProps>() || "";
 
-  const resetEmail = useResetRecoilState(emailRecoil);
-  const resetPassword = useResetRecoilState(passwordRecoil);
-  const resetConfirmPassword = useResetRecoilState(confirm_Password);
+  // const resetEmail = setEmail("");
+  // const resetPassword = setPassword("");
+  // const resetConfirmPassword = setConfirmPassword("");
 
   useEffect(() => {
-    resetEmail();
-    resetPassword();
-    resetConfirmPassword();
+    // resetEmail();
+    console.warn("Email: ", email);
+    setPassword("");
+    setConfirmPassword("");
   }, []);
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import {
   LoginScreenNavigationProp,
   MainScreenNavigationProp,
 } from "../types/navigation";
-import { atom, RecoilState, selector } from "recoil";
+import { atom, PrimitiveAtom } from "jotai";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { seriesApi } from "../services/api";
@@ -18,51 +18,36 @@ export interface ILogin {
 
 const { oapi } = seriesApi;
 
-export const emailRecoil: RecoilState<string> = atom({
-  key: "email",
-  default: "",
-});
+export const emailRecoil: PrimitiveAtom<string> = atom("");
 
-export const passwordRecoil: RecoilState<string> = atom({
-  key: "password",
-  default: "",
-});
-export const confirm_Password: RecoilState<string> = atom({
-  key: "confirm_password",
-  default: "",
-});
+export const passwordRecoil: PrimitiveAtom<string> = atom("");
 
-export const isLoading: RecoilState<boolean> = atom({
-  key: "loading",
-  default: false,
-});
+export const confirm_Password: PrimitiveAtom<string> = atom("");
 
-export const userApi = atom({
-  key: "user",
-  default: `/verify/${emailRecoil}`,
-});
+export const isLoading: PrimitiveAtom<boolean> = atom(false);
 
-export const myUserState = atom({
-  key: "myuser",
-  default: {
+export const userApi = atom(`/verify/${emailRecoil}`);
+
+export const myUserState = atom(
+  {
     uid: "",
     email: "",
     token: "",
   },
-});
+);
 
-export const userState = selector({
-  key: "loader",
-  get: async ({ get }) => {
-    try {
-      const url = get(userApi);
-      const result = await oapi.get(url);
+// export const userState = atom({
+//   key: "loader",
+//   get: async ({ get }) => {
+//     try {
+//       const url = get(userApi);
+//       const result = await oapi.get(url);
 
-      const user = result.data;
-      return user;
-    } catch (error) {}
-  },
-});
+//       const user = result.data;
+//       return user;
+//     } catch (error) {}
+//   },
+// });
 
 export const tryLogin = async (
   email: string,

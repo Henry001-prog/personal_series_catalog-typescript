@@ -26,20 +26,19 @@ import {
   isLoading,
   tryLogin,
 } from "../../store/userRecoil";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useAtom } from "jotai";
 
 export default function LoginPage() {
-  const [email, setEmail] = useRecoilState<string>(emailRecoilState);
-  const [password, setPassword] = useRecoilState<string>(passwordRecoilState);
-  const [confirmPassword, setConfirmPassword] =
-    useRecoilState<string>(confirm_Password);
-  const [loading, setIsLoading] = useRecoilState<boolean>(isLoading);
+  const [email, setEmail] = useAtom<string>(emailRecoilState);
+  const [password, setPassword] = useAtom<string>(passwordRecoilState);
+  const [confirmPassword, setConfirmPassword] = useAtom<string>(confirm_Password);
+  const [loading, setIsLoading] = useAtom<boolean>(isLoading);
   const [createValidate, setCreateValidate] = useState<boolean>(false);
   const [user, setUser] = useState<void>();
 
-  const resetEmail = useResetRecoilState(emailRecoilState);
-  const resetPassword = useResetRecoilState(passwordRecoilState);
-  const resetConfirmPassword = useResetRecoilState(confirm_Password);
+  // const resetEmail = setEmail("");
+  // const resetPassword = setPassword("");
+  // const resetConfirmPassword = setConfirmPassword("");
 
   const navigation = useNavigation<MainScreenNavigationProp>();
 
@@ -83,7 +82,7 @@ export default function LoginPage() {
               value={email}
               returnKeyType="next"
               blurOnSubmit={false}
-              onChangeText={(value) => setEmail(value)}
+              onChangeText={(value: string) => setEmail(value)}
               onSubmitEditing={() => input2Ref.current!.focus()}
               keyboardType="email-address"
               autoCapitalize="none"
@@ -97,7 +96,7 @@ export default function LoginPage() {
               blurOnSubmit={false}
               secureTextEntry
               value={password}
-              onChangeText={(value) => setPassword(value)}
+              onChangeText={(value: string) => setPassword(value)}
               ref={input2Ref}
               onSubmitEditing={
                 createValidate
@@ -119,7 +118,7 @@ export default function LoginPage() {
                 blurOnSubmit={false}
                 secureTextEntry
                 value={confirmPassword}
-                onChangeText={(value) => setConfirmPassword(value)}
+                onChangeText={(value: string) => setConfirmPassword(value)}
                 ref={input3Ref}
                 onSubmitEditing={async () => {
                   await login();
@@ -132,9 +131,9 @@ export default function LoginPage() {
           <CreateButton
             onPress={() => {
               setCreateValidate(!createValidate);
-              resetEmail();
-              resetPassword();
-              resetConfirmPassword();
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
             }}
           >
             <CreateTextButton>

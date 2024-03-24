@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { atom, atomFamily, selector, selectorFamily } from "recoil";
+import { atomFamily, selector, selectorFamily } from "recoil";
 
 import { seriesApi } from "../services/api";
 
@@ -8,6 +8,7 @@ import { MainScreenNavigationProp } from "../types/navigation";
 import { RecoilState } from "recoil";
 import { ISeries } from "../pages/SeriesPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { atom, PrimitiveAtom } from "jotai";
 
 const { api, oapi } = seriesApi;
 
@@ -31,10 +32,8 @@ export const listSeries = async (
   }
 };
 
-export const seriesState = atom<SeriesType[] | undefined>({
-  key: "listSeries",
-  default: [],
-});
+// @ts-ignore
+export const seriesState: SeriesType[] | undefined = atom([]);
 
 export const deleteSerie = (
   serie: SeriesType,
